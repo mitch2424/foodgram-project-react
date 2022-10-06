@@ -51,12 +51,10 @@ Cервис где пользователи могут публиковать р
     sudo docker compose exec backend python manage.py load_ingredients
     ```
 
-6. Ниже представлены доступные адреса проекта:
+6. Доступные адреса проекта:
     -  http://localhost/ - главная страница сайта;
     -  http://localhost/admin/ - админ панель;
     -  http://localhost/api/ - API проекта
     -  http://localhost/api/docs/redoc.html - документация к API
 
 ---
-## Автор
-Коммунити

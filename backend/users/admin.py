@@ -4,13 +4,13 @@ from .models import Follow, User
 
 
 class BaseAdminSettings(admin.ModelAdmin):
-    """Базовая кастомизация админ панели."""
+    """Base admin panel."""
     empty_value_display = '-пусто-'
     list_filter = ('email', 'username')
 
 
 class UsersAdmin(BaseAdminSettings):
-    """Кастомизация админ панели (управление пользователями)."""
+    """Custom admin panel (управление пользователями)."""
     list_display = (
         'id',
         'role',
@@ -24,7 +24,7 @@ class UsersAdmin(BaseAdminSettings):
 
 
 class FollowAdmin(admin.ModelAdmin):
-    """Кастомизация админ панели (управление подписками)."""
+    """Custom admin panel (управление подписками)."""
     list_display = (
         'id',
         'user',

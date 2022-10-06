@@ -4,7 +4,7 @@ from .models import Cart, Favorite, Ingredient, IngredientRecipe, Recipe, Tag
 
 
 class BaseAdminSettings(admin.ModelAdmin):
-    """Базовая кастомизация админ панели."""
+    """Base admin panel."""
     empty_value_display = '-пусто-'
     list_filter = ('author', 'name', 'tags')
 
@@ -20,7 +20,7 @@ class IngredientRecipeInline(admin.TabularInline):
 
 class TagAdmin(BaseAdminSettings):
     """
-    Кастомизация админ панели (управление тегам).
+    Custom admin panel (управление тегам).
     """
     list_display = (
         'name',
@@ -34,7 +34,7 @@ class TagAdmin(BaseAdminSettings):
 
 class IngredientAdmin(BaseAdminSettings):
     """
-    Кастомизация админ панели (управление ингредиентами).
+    Custom admin panel (управление ингредиентами).
     """
     list_display = (
         'name',
@@ -47,7 +47,7 @@ class IngredientAdmin(BaseAdminSettings):
 
 class RecipeAdmin(BaseAdminSettings):
     """
-    Кастомизация админ панели (управление рецептами).
+    Custom admin panel (управление рецептами).
     """
     list_display = (
         'name',
@@ -69,7 +69,7 @@ class RecipeAdmin(BaseAdminSettings):
 
 class IngredientRecipeAdmin(admin.ModelAdmin):
     """
-    Кастомизация админ панели (управление ингридиентами в рецептах).
+    Custom admin panel (управление ингридиентами в рецептах).
     """
     list_display = (
         'recipe',
@@ -81,7 +81,7 @@ class IngredientRecipeAdmin(admin.ModelAdmin):
 
 class FavoriteAdmin(admin.ModelAdmin):
     """
-    Кастомизация админ панели (управление избранных рецептов).
+    Custom admin panel (управление избранных рецептов).
     """
     list_display = ('user', 'recipe')
     list_filter = ('user', 'recipe')
@@ -90,7 +90,7 @@ class FavoriteAdmin(admin.ModelAdmin):
 
 class CartAdmin(admin.ModelAdmin):
     """
-    Кастомизация админ панели (управление избранных рецептов).
+    Custom admin panel (управление избранных рецептов).
     """
     list_display = ('recipe', 'user')
     list_filter = ('recipe', 'user')
