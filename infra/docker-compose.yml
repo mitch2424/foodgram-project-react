@@ -9,7 +9,7 @@ services:
       - ../backend/foodgram/.env
 
   backend:
-    image: avagners/foodgram-backend:latest
+    image: mitch2424/foodgram-backend:latest
     restart: always
     volumes:
       - static_value:/app/static/
@@ -20,7 +20,7 @@ services:
       - ../backend/foodgram/.env
 
   frontend:
-    image: avagners/foodgram-frontend:latest
+    image: mitch2424/foodgram-frontend:latest
     volumes:
       - ../frontend/:/app/result_build/
     depends_on:
