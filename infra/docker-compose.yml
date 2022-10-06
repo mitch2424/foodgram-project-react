@@ -16,8 +16,7 @@ services:
       - media_value:/app/media/ 
     depends_on:
       - db
-    env_file:
-      - ../backend/foodgram/.env
+    
 
   frontend:
     image: mitch2424/foodgram-frontend:latest
