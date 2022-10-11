@@ -1,12 +1,13 @@
-version: '3'
+version: '3.3'
 services:
 
   db:
-    image: postgres:14.4-alpine
+    image: postgres:13.0-alpine
+    restart: always
     volumes:
       - db_value:/var/lib/postgresql/data/
     env_file:
-      - ../backend/foodgram/.env
+      - ./.env
 
   backend:
     image: mitch2424/foodgram-backend:latest
@@ -16,7 +17,8 @@ services:
       - media_value:/app/media/ 
     depends_on:
       - db
-    
+    env_file:
+      - ./.env
 
   frontend:
     image: mitch2424/foodgram-frontend:latest
