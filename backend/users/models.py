@@ -1,76 +1,104 @@
 from django.contrib.auth.models import AbstractUser
-from django.contrib.auth.validators import UnicodeUsernameValidator
 from django.db import models
-from django.db.models import F, Q
-
-
-class UserRole:
-    USER = 'user'
-    ADMIN = 'admin'
-    choices = [
-        (USER, 'USER'),
-        (ADMIN, 'ADMIN')
-    ]
 
 
 class User(AbstractUser):
-    """Модель пользователей."""
-    username_validator = UnicodeUsernameValidator()
+    """Пользователь."""
 
-    username = models.CharField(
-        max_length=150,
+    USER = "user"
+    MODERATOR = "moderator"
+    ADMIN = "admin"
+    ROLES = {
+        (USER, "user"),
+        (MODERATOR, "moderator"),
+        (ADMIN, "admin"),
+    }
+
+    email = models.EmailField(
+        verbose_name="Электронная почта",
         unique=True,
-        validators=[username_validator],
-        verbose_name='Username'
+        max_length=254,
     )
-    email = models.EmailField(max_length=254, unique=True)
-    first_name = models.TextField(max_length=150)
-    last_name = models.TextField(max_length=150)
-    role = models.TextField(
-        choices=UserRole.choices,
-        default=UserRole.USER,
-        verbose_name='Пользовательская роль'
+    username = models.CharField(
+        verbose_name="Имя пользователя",
+        unique=True,
+        max_length=150,
     )
-    USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['username', 'first_name', 'last_name']
+    first_name = models.CharField(
+        verbose_name="Имя", max_length=150, blank=True
+    )
+    last_name = models.CharField(
+        verbose_name="Фамилия", max_length=150, blank=True
+    )
+    bio = models.TextField(
+        verbose_name="О себе",
+        blank=True,
+    )
+    joined_date = models.DateTimeField(
+        verbose_name="Дата регистрации",
+        auto_now_add=True,
+    )
+    password = models.CharField(
+        verbose_name="Пароль",
+        max_length=150,
+        help_text="Введите пароль",
+    )
+
+    role = models.CharField(
+        verbose_name="Статус",
+        max_length=20,
+        choices=ROLES,
+        default=USER,
+    )
+
+    REQUIRED_FIELDS = [
+        "email",
+        "first_name",
+        "last_name",
+        "password",
+    ]
 
     class Meta:
-        ordering = ('id',)
-        verbose_name = 'user'
-        verbose_name_plural = 'Пользователи'
+        verbose_name = "Пользователь"
+        verbose_name_plural = "Пользователи"
+        ordering = ["id"]
 
     def __str__(self):
         return self.username
 
+    @property
+    def is_moderator(self):
+        return self.is_staff or self.role == self.MODERATOR
+
+    @property
+    def is_admin(self):
+        return self.is_superuser or self.role == self.ADMIN
+
 
 class Follow(models.Model):
-    """Модель подписок."""
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-        related_name='follower',
-        verbose_name='Подписчик',
+        related_name="follower",
+        verbose_name="Подписчик",
     )
     author = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-        related_name='following',
-        verbose_name='Автор рецепта',
+        related_name="following",
+        verbose_name="Автор",
     )
 
     class Meta:
-        verbose_name = 'Подписка'
-        verbose_name_plural = 'Подписки'
         constraints = (
             models.UniqueConstraint(
-                fields=('user', 'author'),
-                name='unique_follow',
-            ),
-            models.CheckConstraint(
-                check=~Q(user=F('author')),
-                name='self_following',
+                fields=(
+                    "user",
+                    "author",
+                ),
+                name="unique_follow",
             ),
         )
 
     def __str__(self):
-        return f'{self.user} подписан на {self.author}.'
+        return f"{self.user} подписан на {self.author}"
