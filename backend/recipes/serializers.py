@@ -3,20 +3,15 @@ from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 from rest_framework.validators import UniqueTogetherValidator
 
-from recipes.models import (
-    FavoriteRecipe,
-    Ingredient,
-    Recipe,
-    RecipeIngredient,
-    ShoppingCart,
-)
+from recipes.models import FavoriteRecipe,Ingredient,Recipe,RecipeIngredient,ShoppingCart
+
 from tags.models import Tag
 from tags.serializers import TagSerializer
 from users.serializers import CustomUserSerializer
 
 
 class IngredientSerializer(serializers.ModelSerializer):
-    """Сериализатор вывода ингредиентов."""
+    """Сериализатор ингредиентов."""
 
     class Meta:
         model = Ingredient
@@ -28,7 +23,7 @@ class IngredientSerializer(serializers.ModelSerializer):
 
 
 class ShortRecipeSerializer(serializers.ModelSerializer):
-    """Сериализатор для краткого отображения рецепта."""
+    """Сериализатор  рецепта."""
 
     class Meta:
         model = Recipe
@@ -36,7 +31,7 @@ class ShortRecipeSerializer(serializers.ModelSerializer):
 
 
 class ShowIngredientsInRecipeSerializer(serializers.ModelSerializer):
-    """Сериализатор для вывода ингредиентов в рецепте."""
+    """Сериализатор ингредиентов в рецепте."""
 
     id = serializers.ReadOnlyField(source="ingredient.id")
     name = serializers.ReadOnlyField(source="ingredient.name")
@@ -55,7 +50,7 @@ class ShowIngredientsInRecipeSerializer(serializers.ModelSerializer):
 
 
 class AddIngredientRecipeSerializer(serializers.ModelSerializer):
-    """Сериализатор для добавления ингредиентов."""
+    """Сериализатор добавления ингредиентов."""
 
     id = serializers.PrimaryKeyRelatedField(queryset=Ingredient.objects.all())
 
