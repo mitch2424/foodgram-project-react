@@ -7,7 +7,8 @@ from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
 
 from users.models import Follow, User
-from users.serializers import (CustomUserSerializer,
+from users.serializers import (
+    CustomUserSerializer,
     FollowSerializer,
     ShowFollowsSerializer,
 )
@@ -55,7 +56,7 @@ class CustomUserViewSet(UserViewSet):
         permission_classes=[permissions.IsAuthenticated],
     )
     def show_follows(self, request):
-        """Просмотр подписок."""
+        """Subs list."""
         user_obj = User.objects.filter(following__user=request.user)
         paginator = PageNumberPagination()
         result_page = paginator.paginate_queryset(user_obj, request)
