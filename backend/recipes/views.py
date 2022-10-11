@@ -12,8 +12,8 @@ from recipes.serializers import AddRecipeSerializer, ShowRecipeSerializer
 from recipes.services import convert_to_file
 
 from .filters import IngredientSearchFilter, RecipeFilter
-from .models import FavoriteRecipe,Ingredient,Recipe,RecipeIngredient,ShoppingCart
-from .serializers import FavoriteRecipeSerializer,IngredientSerializer,ShoppingCartSerializer
+from .models import FavoriteRecipe, Ingredient, Recipe, RecipeIngredient, ShoppingCart
+from .serializers import FavoriteRecipeSerializer, IngredientSerializer, ShoppingCartSerializer
 
 
 class IngredientViewSet(viewsets.ReadOnlyModelViewSet):
