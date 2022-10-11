@@ -1,5 +1,4 @@
 from rest_framework import viewsets
-
 from recipes.permissions import IsAdminOrReadOnly
 from tags.serializers import TagSerializer
 

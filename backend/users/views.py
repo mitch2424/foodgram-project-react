@@ -7,15 +7,14 @@ from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
 
 from users.models import Follow, User
-from users.serializers import (
-    CustomUserSerializer,
+from users.serializers import (CustomUserSerializer,
     FollowSerializer,
     ShowFollowsSerializer,
 )
 
 
 class CustomUserViewSet(UserViewSet):
-    """Вьюсет для пользователя."""
+    """Viewset for user."""
 
     queryset = User.objects.all()
     serializer_class = CustomUserSerializer
@@ -31,7 +30,7 @@ class CustomUserViewSet(UserViewSet):
         permission_classes=[permissions.IsAuthenticated],
     )
     def subscribe(self, request, id):
-        """Подписка/отписка на/от автора."""
+        """Subscribe/unsub for author."""
         author = get_object_or_404(User, id=id)
         serializer = FollowSerializer(
             data={"user": request.user.id, "author": id}

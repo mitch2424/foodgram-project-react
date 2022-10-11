@@ -6,18 +6,19 @@ from rest_framework.generics import get_object_or_404
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
-
 from recipes.permissions import IsAdminAuthorOrReadOnly, IsAdminOrReadOnly
 from recipes.serializers import AddRecipeSerializer, ShowRecipeSerializer
 from recipes.services import convert_to_file
 
 from .filters import IngredientSearchFilter, RecipeFilter
-from .models import FavoriteRecipe, Ingredient, Recipe, RecipeIngredient, ShoppingCart
-from .serializers import FavoriteRecipeSerializer, IngredientSerializer, ShoppingCartSerializer
+from .models import (
+    FavoriteRecipe, Ingredient, Recipe, RecipeIngredient, ShoppingCart)
+from .serializers import (
+    FavoriteRecipeSerializer, IngredientSerializer, ShoppingCartSerializer)
 
 
 class IngredientViewSet(viewsets.ReadOnlyModelViewSet):
-    """Вьюсет  ингредиентов."""
+    """Ingredients viewset."""
 
     queryset = Ingredient.objects.all()
     serializer_class = IngredientSerializer
@@ -28,7 +29,7 @@ class IngredientViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 class RecipeViewSet(viewsets.ModelViewSet):
-    """Вьюсет   рецептов."""
+    """Recipe   viewset."""
 
     queryset = Recipe.objects.all()
     filter_backends = [DjangoFilterBackend]
@@ -47,7 +48,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
         )
 
     def __add_or_del_recipe(self, method, user, pk, model, serializer):
-        """В избранное или список покупок."""
+        """Favourite or list of goods."""
         recipe = get_object_or_404(Recipe, pk=pk)
         if method == "POST":
             model.objects.get_or_create(user=user, recipe=recipe)
@@ -68,7 +69,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
         permission_classes=[permissions.IsAuthenticated],
     )
     def favorite(self, request, pk):
-        """Добавление в избранное, удаление из избранного"""
+        """Add/del to/from favourites"""
         return self.__add_or_del_recipe(
             request.method,
             request.user,
@@ -85,7 +86,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
         permission_classes=[permissions.IsAuthenticated],
     )
     def shopping_cart(self, request, pk):
-        """В корзине, из корзины."""
+        """In/out from shopping cart."""
         return self.__add_or_del_recipe(
             request.method,
             request.user,
@@ -106,7 +107,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
         ],
     )
     def download_shopping_cart(self, request):
-        """Список покупок."""
+        """List of goods."""
         cart_ingredients = (
             RecipeIngredient.objects.filter(
                 recipe__shopping_cart__user=request.user
