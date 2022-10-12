@@ -63,7 +63,6 @@ class AddIngredientRecipeSerializer(serializers.ModelSerializer):
 
 class AddRecipeSerializer(serializers.ModelSerializer):
     """Adding recipes serializer."""
-    
     cooking_time = serializers.IntegerField()
     ingredients = AddIngredientRecipeSerializer(many=True)
     tags = serializers.PrimaryKeyRelatedField(
@@ -97,7 +96,7 @@ class AddRecipeSerializer(serializers.ModelSerializer):
                 )
         if int(ingredients['cooking_time']) < 1:
             raise serializers.ValidationError(
-              'Время приготовления должно быть больше нуля!'  
+              'Время приготовления должно быть больше нуля!'
             )
         ingrs = [item["id"] for item in ingredients]
         if len(ingrs) != len(set(ingrs)):
@@ -105,7 +104,6 @@ class AddRecipeSerializer(serializers.ModelSerializer):
                 'Ингредиенты в рецепте должны быть уникальными!'
             )
         return ingredients
-
 
     @staticmethod
     def __add_ingredients(ingredients, recipe):

@@ -23,7 +23,7 @@ class IngredientAdmin(admin.ModelAdmin):
             f' {item["ingredient__measurement_unit"]}.'
             for item in obj.recipe.values(
                 'ingredient__name',
-                'amount', 'ingredient__measurement_unit')])    
+                'amount', 'ingredient__measurement_unit')])  
 
 
 @admin.register(Recipe)

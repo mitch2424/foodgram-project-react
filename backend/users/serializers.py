@@ -73,8 +73,9 @@ class ShowFollowsSerializer(CustomUserSerializer):
     """Subs show serializator."""
 
     recipes = serializers.SerializerMethodField()
-    recipes_count = serializers.SerializerMethodField(source='recipes_count.count', 
-    read_only=True)
+    recipes_count = serializers.SerializerMethodField(
+        source='recipes_count.count', read_only=True
+        )
 
     class Meta:
         model = User
