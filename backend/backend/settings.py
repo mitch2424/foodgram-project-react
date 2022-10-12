@@ -8,7 +8,7 @@ load_dotenv(dotenv_path=env_path)
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-SECRET_KEY = os.getenv('SECRET_KEY', default='secret_key')
+SECRET_KEY = os.getenv('SECRET_KEY', default='60pdbvm)4drw=_18@yr657-^zd-bzj)&hu_6sztd#sn+*5b6#a')
 
 DEBUG = os.getenv('DEBUG', default=False)
 
@@ -88,7 +88,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-LANGUAGE_CODE = 'Ru-ru'
+LANGUAGE_CODE = 'ru-RU'
 
 TIME_ZONE = 'Asia/Almaty'
 
