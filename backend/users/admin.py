@@ -6,16 +6,16 @@ from .models import User
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
     list_display = (
-        "id",
-        "username",
-        "first_name",
-        "last_name",
-        "email",
-        "role",
+        'id',
+        'username',
+        'first_name',
+        'last_name',
+        'email',
+        'role',
     )
-    list_filter = ("email", "username")
+    list_filter = ('email', 'username')
     search_fields = (
-        "emil",
-        "username",
+        'emil',
+        'username',
     )
-    empty_value_display = "-пусто-"
+    empty_value_display = '-пусто-'

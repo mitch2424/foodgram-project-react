@@ -2,6 +2,7 @@ from drf_base64.fields import Base64ImageField
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 from rest_framework.validators import UniqueTogetherValidator
+
 from recipes.models import (
     FavoriteRecipe, Ingredient, Recipe, RecipeIngredient, ShoppingCart
 )
@@ -17,9 +18,9 @@ class IngredientSerializer(serializers.ModelSerializer):
     class Meta:
         model = Ingredient
         fields = (
-            "id",
-            "name",
-            "measurement_unit",
+            'id',
+            'name',
+            'measurement_unit',
         )
 
 
@@ -28,25 +29,25 @@ class ShortRecipeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Recipe
-        fields = ("id", "name", "image", "cooking_time")
+        fields = ('id', 'name', 'image', 'cooking_time')
 
 
 class ShowIngredientsInRecipeSerializer(serializers.ModelSerializer):
     """Ingredients in recipe serializer."""
 
-    id = serializers.ReadOnlyField(source="ingredient.id")
-    name = serializers.ReadOnlyField(source="ingredient.name")
+    id = serializers.ReadOnlyField(source='ingredient.id')
+    name = serializers.ReadOnlyField(source='ingredient.name')
     measurement_unit = serializers.ReadOnlyField(
-        source="ingredient.measurement_unit"
+        source='ingredient.measurement_unit'
     )
 
     class Meta:
         model = RecipeIngredient
         fields = (
-            "id",
-            "name",
-            "measurement_unit",
-            "amount",
+            'id',
+            'name',
+            'measurement_unit',
+            'amount',
         )
 
 
@@ -57,12 +58,13 @@ class AddIngredientRecipeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = RecipeIngredient
-        fields = ("id", "amount")
+        fields = ('id', 'amount')
 
 
 class AddRecipeSerializer(serializers.ModelSerializer):
     """Adding recipes serializer."""
-
+    
+    cooking_time = serializers.IntegerField()
     ingredients = AddIngredientRecipeSerializer(many=True)
     tags = serializers.PrimaryKeyRelatedField(
         queryset=Tag.objects.all(), many=True
@@ -74,31 +76,36 @@ class AddRecipeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Recipe
         fields = (
-            "id",
-            "ingredients",
-            "tags",
-            "image",
-            "name",
-            "text",
-            "cooking_time",
-            "author",
+            'id',
+            'ingredients',
+            'tags',
+            'image',
+            'name',
+            'text',
+            'cooking_time',
+            'author',
         )
 
-    def validate_ingredients(self, ingredients):
+    def validate(self, ingredients):
         """Validating ingredients."""
         if not ingredients:
-            raise ValidationError("Необходимо добавить ингредиенты")
+            raise ValidationError('Необходимо добавить ингредиенты')
         for ingredient in ingredients:
-            if int(ingredient["amount"]) <= 0:
+            if int(ingredient['amount']) <= 0:
                 raise ValidationError(
-                    "Необходимо добавить хотя бы один ингредиент"
+                    'Необходимо добавить хотя бы один ингредиент'
                 )
+        if int(ingredients['cooking_time']) < 1:
+            raise serializers.ValidationError(
+              'Время приготовления должно быть больше нуля!'  
+            )
         ingrs = [item["id"] for item in ingredients]
         if len(ingrs) != len(set(ingrs)):
             raise ValidationError(
-                "Ингредиенты в рецепте должны быть уникальными!"
+                'Ингредиенты в рецепте должны быть уникальными!'
             )
         return ingredients
+
 
     @staticmethod
     def __add_ingredients(ingredients, recipe):
@@ -113,10 +120,10 @@ class AddRecipeSerializer(serializers.ModelSerializer):
         RecipeIngredient.objects.bulk_create(ingredients_to_add)
 
     def create(self, validated_data):
-        author = self.context.get("request").user
-        tags_data = validated_data.pop("tags")
-        ingredients_data = validated_data.pop("ingredients")
-        image = validated_data.pop("image")
+        author = self.context.get('request').user
+        tags_data = validated_data.pop('tags')
+        ingredients_data = validated_data.pop('ingredients')
+        image = validated_data.pop('image')
         recipe = Recipe.objects.create(
             image=image, author=author, **validated_data
         )

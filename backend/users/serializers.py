@@ -12,7 +12,7 @@ RECIPES_LIMIT = 3
 
 
 class CreateUserSerializer(UserCreateSerializer):
-    """Сериализатор при создании пользователя."""
+    """User create serializator."""
 
     class Meta:
         model = User
@@ -39,7 +39,7 @@ class CreateUserSerializer(UserCreateSerializer):
 
 
 class CustomUserSerializer(UserSerializer):
-    """Сериализатор для отображения пользователя."""
+    """User show serializator."""
 
     is_subscribed = serializers.SerializerMethodField(read_only=True)
 
@@ -62,7 +62,7 @@ class CustomUserSerializer(UserSerializer):
 
 
 class FollowShortRecipeSerializer(serializers.ModelSerializer):
-    """Сериализатор для отображения рецептов в подписке."""
+    """Recipe swow serializator."""
 
     class Meta:
         model = Recipe
@@ -70,7 +70,7 @@ class FollowShortRecipeSerializer(serializers.ModelSerializer):
 
 
 class ShowFollowsSerializer(CustomUserSerializer):
-    """Сериализатор отображения подписок."""
+    """List of goods serializator."""
 
     recipes = serializers.SerializerMethodField()
     recipes_count = serializers.SerializerMethodField()
@@ -98,7 +98,7 @@ class ShowFollowsSerializer(CustomUserSerializer):
 
 
 class FollowSerializer(serializers.ModelSerializer):
-    """Сериализатор подписок."""
+    """Subs serializator."""
 
     user = serializers.IntegerField(source="user.id")
     author = serializers.IntegerField(source="author.id")
@@ -117,7 +117,7 @@ class FollowSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(
                 {"errors": "Невозможно подписаться на самого себя"}
             )
-        elif follow_exist:
+        if follow_exist:
             raise serializers.ValidationError({"errors": "Уже подписаны"})
         return data
 
