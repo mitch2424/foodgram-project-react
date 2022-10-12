@@ -62,7 +62,7 @@ class CustomUserSerializer(UserSerializer):
 
 
 class FollowShortRecipeSerializer(serializers.ModelSerializer):
-    """Recipe swow serializator."""
+    """Recipe show serializator."""
 
     class Meta:
         model = Recipe
@@ -70,10 +70,11 @@ class FollowShortRecipeSerializer(serializers.ModelSerializer):
 
 
 class ShowFollowsSerializer(CustomUserSerializer):
-    """List of goods serializator."""
+    """Subs show serializator."""
 
     recipes = serializers.SerializerMethodField()
-    recipes_count = serializers.SerializerMethodField()
+    recipes_count = serializers.SerializerMethodField(source='recipes_count.count', 
+    read_only=True)
 
     class Meta:
         model = User
@@ -93,8 +94,7 @@ class ShowFollowsSerializer(CustomUserSerializer):
         return FollowShortRecipeSerializer(recipes, many=True).data
 
     def get_recipes_count(self, obj):
-        recipes = Recipe.objects.filter(author=obj)
-        return recipes.count()
+        return obj.recipes_count.count()
 
 
 class FollowSerializer(serializers.ModelSerializer):
