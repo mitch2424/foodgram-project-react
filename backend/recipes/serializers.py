@@ -8,7 +8,6 @@ from recipes.models import (
 )
 from tags.models import Tag
 from tags.serializers import TagSerializer
-
 from users.serializers import CustomUserSerializer
 
 
