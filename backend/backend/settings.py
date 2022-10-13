@@ -12,7 +12,7 @@ SECRET_KEY = os.getenv('SECRET_KEY', default='60pdbvm)4drw=_18@yr657-^zd-bzj)&hu
 
 DEBUG = os.getenv('DEBUG', default=False)
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['*', 'backend']
 
 INSTALLED_APPS = [
     'django.contrib.admin',
