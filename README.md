@@ -1,5 +1,6 @@
 ### praktikum_diplom
 
+[![foodgram workflow](https://github.com/mitch2424/foodgram-project-react/actions/workflows/main.yml/badge.svg)](https://github.com/mitch2424/foodgram-project-react/actions/workflows/main.yml)
 
 ## Описание проекта
 # Foodgram - «Продуктовый помощник»
@@ -12,7 +13,7 @@ Cервис где пользователи могут публиковать р
 1. Склонировать репозиторий на локальную машину.
 
     ```
-    git clone 
+    git clone git@github.com:mitch2424/foodgram-project-react.git
     ```
 
 2. Создайте .env файл в директории backend/foodgram/, в котором должны содержаться следующие переменные для подключения к базе PostgreSQL:
