@@ -12,7 +12,7 @@ RECIPES_LIMIT = 3
 
 
 class CreateUserSerializer(UserCreateSerializer):
-    """User create serializator."""
+    """Сериализатор при создании пользователя."""
 
     class Meta:
         model = User
@@ -39,7 +39,7 @@ class CreateUserSerializer(UserCreateSerializer):
 
 
 class CustomUserSerializer(UserSerializer):
-    """User show serializator."""
+    """Сериализатор для отображения пользователя."""
 
     is_subscribed = serializers.SerializerMethodField(read_only=True)
 
@@ -62,7 +62,7 @@ class CustomUserSerializer(UserSerializer):
 
 
 class FollowShortRecipeSerializer(serializers.ModelSerializer):
-    """Recipe show serializator."""
+    """Сериализатор для отображения рецептов в подписке."""
 
     class Meta:
         model = Recipe
@@ -70,12 +70,10 @@ class FollowShortRecipeSerializer(serializers.ModelSerializer):
 
 
 class ShowFollowsSerializer(CustomUserSerializer):
-    """Subs show serializator."""
+    """Сериализатор отображения подписок."""
 
     recipes = serializers.SerializerMethodField()
-    recipes_count = serializers.SerializerMethodField(
-        source='recipes_count.count', read_only=True
-    )
+    recipes_count = serializers.SerializerMethodField()
 
     class Meta:
         model = User
@@ -95,11 +93,12 @@ class ShowFollowsSerializer(CustomUserSerializer):
         return FollowShortRecipeSerializer(recipes, many=True).data
 
     def get_recipes_count(self, obj):
-        return obj.recipes_count.count()
+        recipes = Recipe.objects.filter(author=obj)
+        return recipes.count()
 
 
 class FollowSerializer(serializers.ModelSerializer):
-    """Subs serializator."""
+    """Сериализатор подписок."""
 
     user = serializers.IntegerField(source="user.id")
     author = serializers.IntegerField(source="author.id")
@@ -118,7 +117,7 @@ class FollowSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(
                 {"errors": "Невозможно подписаться на самого себя"}
             )
-        if follow_exist:
+        elif follow_exist:
             raise serializers.ValidationError({"errors": "Уже подписаны"})
         return data
 
