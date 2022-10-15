@@ -88,7 +88,7 @@ class AddRecipeSerializer(serializers.ModelSerializer):
             "author",
         )
 
-    def validate(self, ingredients):
+    def validate_ingredients(self, ingredients):
         """Валидируем ингредиенты."""
         if not ingredients:
             raise ValidationError("Необходимо добавить ингредиенты")
