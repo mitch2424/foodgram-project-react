@@ -73,7 +73,7 @@ class ShowFollowsSerializer(CustomUserSerializer):
     """Сериализатор отображения подписок."""
 
     recipes = serializers.SerializerMethodField()
-    recipes_count = serializers.SerializerMethodField()
+    recipes_count = serializers.IntegerField(source='recipes.count', read_only=True)
 
     class Meta:
         model = User
