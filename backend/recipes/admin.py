@@ -6,6 +6,7 @@ from .models import (
     Recipe,
     RecipeIngredient,
     ShoppingCart,
+    AmountIngredient,
 )
 
 
