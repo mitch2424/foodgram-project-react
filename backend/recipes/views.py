@@ -27,7 +27,7 @@ from .serializers import (
 
 
 class IngredientViewSet(viewsets.ReadOnlyModelViewSet):
-    """Вьюсет для обработки ингредиентов."""
+    """Viewset for ingredients rendering."""
 
     queryset = Ingredient.objects.all()
     serializer_class = IngredientSerializer
@@ -38,7 +38,7 @@ class IngredientViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 class RecipeViewSet(viewsets.ModelViewSet):
-    """Вьюсет для обработки рецептов."""
+    """Viewset for recipes rendering."""
 
     queryset = Recipe.objects.all()
     filter_backends = [DjangoFilterBackend]
@@ -46,8 +46,8 @@ class RecipeViewSet(viewsets.ModelViewSet):
     filter_backends = [DjangoFilterBackend]
     default_serializer_class = AddRecipeSerializer
     serializer_classes = {
-        "retrieve": ShowRecipeSerializer,
-        "list": ShowRecipeSerializer,
+        'retrieve': ShowRecipeSerializer,
+        'list': ShowRecipeSerializer,
     }
     filterset_class = RecipeFilter
 
@@ -57,28 +57,28 @@ class RecipeViewSet(viewsets.ModelViewSet):
         )
 
     def __add_or_del_recipe(self, method, user, pk, model, serializer):
-        """Добавление/удаление в избранное или список покупок."""
+        """Add/remove from favorites/shopping_cart."""
         recipe = get_object_or_404(Recipe, pk=pk)
-        if method == "POST":
+        if method == 'POST':
             model.objects.get_or_create(user=user, recipe=recipe)
             return Response(
                 serializer.to_representation(instance=recipe),
                 status=status.HTTP_201_CREATED,
             )
-        if method == "DELETE":
+        if method == 'DELETE':
             model.objects.filter(user=user, recipe=recipe).delete()
             return Response(status=status.HTTP_204_NO_CONTENT)
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
     @action(
         detail=True,
-        methods=["POST", "DELETE"],
-        url_path="favorite",
-        url_name="favorite",
+        methods=['POST', 'DELETE'],
+        url_path='favorite',
+        url_name='favorite',
         permission_classes=[permissions.IsAuthenticated],
     )
     def favorite(self, request, pk):
-        """Добавление в избранное, удаление из избранного"""
+        """Add/delete from favorites"""
         return self.__add_or_del_recipe(
             request.method,
             request.user,
@@ -89,13 +89,13 @@ class RecipeViewSet(viewsets.ModelViewSet):
 
     @action(
         detail=True,
-        methods=["POST", "DELETE"],
-        url_name="shopping_cart",
-        url_path="shopping_cart",
+        methods=['POST', 'DELETE'],
+        url_name='shopping_cart',
+        url_path='shopping_cart',
         permission_classes=[permissions.IsAuthenticated],
     )
     def shopping_cart(self, request, pk):
-        """Добавление покупок в корзине, удаление покупок из корзины."""
+        """Add/remove from shopping_cart."""
         return self.__add_or_del_recipe(
             request.method,
             request.user,
@@ -107,24 +107,24 @@ class RecipeViewSet(viewsets.ModelViewSet):
     @action(
         detail=False,
         methods=[
-            "GET",
+            'GET',
         ],
-        url_name="download_shopping_cart",
-        url_path="download_shopping_cart",
+        url_name='download_shopping_cart',
+        url_path='download_shopping_cart',
         permission_classes=[
             IsAuthenticated,
         ],
     )
     def download_shopping_cart(self, request):
-        """Выгрузка списка покупок."""
+        """Upload shopping_card list."""
         cart_ingredients = (
             RecipeIngredient.objects.filter(
                 recipe__shopping_cart__user=request.user
             )
             .values(
-                "ingredient__name",
-                "ingredient__measurement_unit",
+                'ingredient__name',
+                'ingredient__measurement_unit',
             )
-            .annotate(ingredient_total_amount=Sum("amount"))
+            .annotate(ingredient_total_amount=Sum('amount'))
         )
         return convert_to_file(cart_ingredients)

@@ -5,63 +5,63 @@ from django.db import models
 class User(AbstractUser):
     """Пользователь."""
 
-    USER = "user"
-    MODERATOR = "moderator"
-    ADMIN = "admin"
+    USER = 'user'
+    MODERATOR = 'moderator'
+    ADMIN = 'admin'
     ROLES = {
-        (USER, "user"),
-        (MODERATOR, "moderator"),
-        (ADMIN, "admin"),
+        (USER, 'user'),
+        (MODERATOR, 'moderator'),
+        (ADMIN, 'admin'),
     }
 
     email = models.EmailField(
-        verbose_name="Электронная почта",
+        verbose_name='Электронная почта',
         unique=True,
         max_length=254,
     )
     username = models.CharField(
-        verbose_name="Имя пользователя",
+        verbose_name='Имя пользователя',
         unique=True,
         max_length=150,
     )
     first_name = models.CharField(
-        verbose_name="Имя", max_length=150, blank=True
+        verbose_name='Имя', max_length=150, blank=True
     )
     last_name = models.CharField(
-        verbose_name="Фамилия", max_length=150, blank=True
+        verbose_name='Фамилия', max_length=150, blank=True
     )
     bio = models.TextField(
-        verbose_name="О себе",
+        verbose_name='О себе',
         blank=True,
     )
     joined_date = models.DateTimeField(
-        verbose_name="Дата регистрации",
+        verbose_name='Дата регистрации',
         auto_now_add=True,
     )
     password = models.CharField(
-        verbose_name="Пароль",
+        verbose_name='Пароль',
         max_length=150,
-        help_text="Введите пароль",
+        help_text='Введите пароль',
     )
 
     role = models.CharField(
-        verbose_name="Статус",
+        verbose_name='Статус',
         max_length=20,
         choices=ROLES,
         default=USER,
     )
 
     REQUIRED_FIELDS = [
-        "email",
-        "first_name",
-        "last_name",
-        "password",
+        'email',
+        'first_name',
+        'last_name',
+        'password',
     ]
 
     class Meta:
-        verbose_name = "Пользователь"
-        verbose_name_plural = "Пользователи"
-        ordering = ["id"]
+        verbose_name = 'Пользователь'
+        verbose_name_plural = 'Пользователи'
+        ordering = ['id']
 
     def __str__(self):
         return self.username
@@ -79,26 +79,26 @@ class Follow(models.Model):
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-        related_name="follower",
-        verbose_name="Подписчик",
+        related_name='follower',
+        verbose_name='Подписчик',
     )
     author = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-        related_name="following",
-        verbose_name="Автор",
+        related_name='following',
+        verbose_name='Автор',
     )
 
     class Meta:
         constraints = (
             models.UniqueConstraint(
                 fields=(
-                    "user",
-                    "author",
+                    'user',
+                    'author',
                 ),
-                name="unique_follow",
+                name='unique_follow',
             ),
         )
 
     def __str__(self):
-        return f"{self.user} подписан на {self.author}"
+        return f'{self.user} подписан на {self.author}'
