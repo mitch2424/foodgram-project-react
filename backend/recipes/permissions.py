@@ -2,7 +2,7 @@ from rest_framework import permissions
 
 
 class IsAdminOrReadOnly(permissions.BasePermission):
-    """Allowed by administrator or read-only"""
+    """Разрешено администратору или только для чтения"""
 
     def has_permission(self, request, view):
         return request.method in permissions.SAFE_METHODS or (
@@ -12,7 +12,7 @@ class IsAdminOrReadOnly(permissions.BasePermission):
 
 
 class IsAdminAuthorOrReadOnly(permissions.BasePermission):
-    """Allowed by the author or administrator, the others are read-only"""
+    """Разрешено автору или администратору, остальные только для чтения"""
 
     def has_object_permission(self, request, view, obj):
         return (

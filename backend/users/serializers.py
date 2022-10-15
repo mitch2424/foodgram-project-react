@@ -12,82 +12,80 @@ RECIPES_LIMIT = 3
 
 
 class CreateUserSerializer(UserCreateSerializer):
-    """Serializer when creating a user."""
+    """Сериализатор при создании пользователя."""
 
     class Meta:
         model = User
         fields = (
-            'email',
-            'id',
-            'username',
-            'first_name',
-            'last_name',
-            'password',
+            "email",
+            "id",
+            "username",
+            "first_name",
+            "last_name",
+            "password",
         )
-        extra_kwargs = {'password': {'write_only': True}}
+        extra_kwargs = {"password": {"write_only": True}}
 
     def create(self, validated_data):
         user = User.objects.create(
-            email=validated_data['email'],
-            username=validated_data['username'],
-            first_name=validated_data['first_name'],
-            last_name=validated_data['last_name'],
+            email=validated_data["email"],
+            username=validated_data["username"],
+            first_name=validated_data["first_name"],
+            last_name=validated_data["last_name"],
         )
-        user.set_password(validated_data['password'])
+        user.set_password(validated_data["password"])
         user.save()
         return user
 
 
 class CustomUserSerializer(UserSerializer):
-    """Serializer for user display."""
+    """Сериализатор для отображения пользователя."""
 
     is_subscribed = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = User
         fields = (
-            'email',
-            'id',
-            'username',
-            'first_name',
-            'last_name',
-            'is_subscribed',
+            "email",
+            "id",
+            "username",
+            "first_name",
+            "last_name",
+            "is_subscribed",
         )
 
     def get_is_subscribed(self, obj):
-        request = self.context.get('request')
+        request = self.context.get("request")
         if request is None or request.user.is_anonymous:
             return False
         return Follow.objects.filter(user=request.user, author=obj.id).exists()
 
 
 class FollowShortRecipeSerializer(serializers.ModelSerializer):
-    """Serializer for displaying recipes in a subscription."""
+    """Сериализатор для отображения рецептов в подписке."""
 
     class Meta:
         model = Recipe
-        fields = ('id', 'name', 'image', 'cooking_time')
+        fields = ("id", "name", "image", "cooking_time")
 
 
 class ShowFollowsSerializer(CustomUserSerializer):
-    """Subscription Display Serializer."""
+    """Сериализатор отображения подписок."""
 
     recipes = serializers.SerializerMethodField()
-    recipes_count = serializers.SerializerMethodField(
-        source='recipes_count.count', read_only=True
-    )
+    recipes_count = serializers.SerializerMethodField()
 
     class Meta:
         model = User
         fields = (
-            'email',
-            'id',
-            'username',
-            'first_name',
-            'last_name',
-            'is_subscribed',
-            'recipes',
-            'recipes_count',
+            "email",
+            "id",
+            "username",
+            "first_name",
+            "last_name",
+            "is_subscribed",
+            "recipes",
+            "recipes_count",
         )
 
     def get_recipes(self, obj):
@@ -100,31 +98,31 @@ class ShowFollowsSerializer(CustomUserSerializer):
 
 
 class FollowSerializer(serializers.ModelSerializer):
-    """Subscription Serializer."""
+    """Сериализатор подписок."""
 
-    user = serializers.IntegerField(source='user.id')
-    author = serializers.IntegerField(source='author.id')
+    user = serializers.IntegerField(source="user.id")
+    author = serializers.IntegerField(source="author.id")
 
     class Meta:
         model = Follow
-        fields = ['user', 'author']
+        fields = ["user", "author"]
 
     def validate(self, data):
-        user = data['user']['id']
-        author = data['author']['id']
+        user = data["user"]["id"]
+        author = data["author"]["id"]
         follow_exist = Follow.objects.filter(
             user=user, author__id=author
         ).exists()
         if user == author:
             raise serializers.ValidationError(
-                {'errors': 'Невозможно подписаться на самого себя'}
+                {"errors": "Невозможно подписаться на самого себя"}
             )
-        if follow_exist:
-            raise serializers.ValidationError({'errors': 'Уже подписаны'})
+        elif follow_exist:
+            raise serializers.ValidationError({"errors": "Уже подписаны"})
         return data
 
     def create(self, validated_data):
-        author = validated_data.get('author')
-        author = get_object_or_404(User, pk=author.get('id'))
-        user = validated_data.get('user')
+        author = validated_data.get("author")
+        author = get_object_or_404(User, pk=author.get("id"))
+        user = validated_data.get("user")
         return Follow.objects.create(user=user, author=author)
