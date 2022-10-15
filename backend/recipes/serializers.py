@@ -97,6 +97,10 @@ class AddRecipeSerializer(serializers.ModelSerializer):
                 raise ValidationError(
                     "Необходимо добавить хотя бы один ингредиент"
                 )
+        if int(ingredients['cooking_time']) < 1:
+            raise serializers.ValidationError(
+                "Время приготовления должно быть больше нуля!"
+            )
         ingrs = [item["id"] for item in ingredients]
         if len(ingrs) != len(set(ingrs)):
             raise ValidationError(

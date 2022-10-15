@@ -2,7 +2,19 @@
 [![foodgram workflow](https://github.com/mitch2424/foodgram-project-react/actions/workflows/main.yml/badge.svg)](https://github.com/mitch2424/foodgram-project-react/actions/workflows/main.yml)
 
 Проект доступен по адресу: http://51.250.93.237/
-Доступ в админку: логин admin пароль admin
+
+Доступ в админку: 
+```
+логин Elephant пароль admin
+```
+
+Пользователи: 
+````
+ivan24.rublev@yandex.ru
+пароль admin_admin
+mirlan.kaparov24@gmail.com 
+пароль admin_admin
+````
 # Foodgram, «Продуктовый помощник»
 
 Cервис где пользователи могут публиковать рецепты, подписываться на публикации других пользователей, добавлять понравившиеся рецепты в список «Избранное», а перед походом в магазин скачивать сводный список продуктов, необходимых для приготовления одного или нескольких выбранных блюд.
