@@ -6,28 +6,12 @@ from .models import (
     Recipe,
     RecipeIngredient,
     ShoppingCart,
-    AmountIngredient,
 )
-
-
-@admin.register(AmountIngredient)
-class AmountIngredientAdmin(admin.ModelAdmin):
-    list_display = ("ingredient", "amount",)
-    list_filter = ("ingredient",)
-
-    @admin.display(description="Ингредиенты")
-    def get_ingredients(self, obj):
-        return '\n'.join([
-            f'{item["ingredient__name"]} - {item["amount"]}'
-            f'{item["ingredient__measurement_unit"]}.'
-            for item in obj.recipe.values(
-                'ingredient__name',
-                'amount', 'ingredient__measurement_unit')])
 
 
 @admin.register(Ingredient)
 class IngredientAdmin(admin.ModelAdmin):
-    list_display = ("id", "name", "measurement_unit")
+    list_display = ("id", "name", "measurement_unit",)
     list_filter = ("name",)
     search_fields = ("name",)
     empty_value_display = "-пусто-"

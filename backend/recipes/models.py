@@ -118,27 +118,6 @@ class RecipeIngredient(models.Model):
         return f"{self.ingredient} в {self.recipe}"
 
 
-class AmountIngredient(models.Model):
-    ingredient = models.ForeignKey(
-        Ingredient,
-        on_delete=models.CASCADE,
-        related_name='ingredient_recipe',
-        null=True,
-    )
-    recipe = models.ForeignKey(
-        Recipe,
-        on_delete=models.CASCADE,
-        null=True,
-        related_name='ingredients_recipes')
-    amount = models.PositiveSmallIntegerField(
-        null=False,
-        validators=[MinValueValidator(1)]
-    )
-
-    def __str__(self):
-        return f'{self.ingredient} - {self.amount}'
-
-
 class FavoriteRecipe(models.Model):
     """Избранное."""
 
