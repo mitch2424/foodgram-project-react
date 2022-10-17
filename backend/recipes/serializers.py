@@ -104,7 +104,7 @@ class AddRecipeSerializer(serializers.ModelSerializer):
                 "Ингредиенты в рецепте должны быть уникальными!"
             )
         if int(ingredients['cooking_time']) < 1:
-            raise serializers.ValidationError(
+            raise ValidationError(
                 "Время приготовления должно быть больше нуля!"
             )
         return ingredients
