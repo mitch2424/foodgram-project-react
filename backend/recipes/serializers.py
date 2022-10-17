@@ -89,25 +89,31 @@ class AddRecipeSerializer(serializers.ModelSerializer):
         )
 
     def validate(self, data):
-        """Validate ingredients"""
-        ingredients = self.initial_data.get('ingredients')
-        if not ingredients:
-            raise serializers.ValidationError({
-                'ingredients': 'Нужен хоть один ингридиент для рецепта'})
-        ingredient_list = []
-        for ingredient_item in ingredients:
-            ingredient = get_object_or_404(Ingredient,
-                                           id=ingredient_item['id'])
-            if ingredient in ingredient_list:
-                raise serializers.ValidationError('Ингридиенты должны '
-                                                  'быть уникальными')
-            ingredient_list.append(ingredient)
-            if int(ingredient_item['amount']) < 0:
-                raise serializers.ValidationError({
-                    'ingredients': ('Убедитесь, что значение количества '
-                                    'ингредиента больше 0')
-                })
-        data['ingredients'] = ingredients
+        """Валидация ингредиентов и количества."""
+        if not data:
+            raise serializers.ValidationError(
+                'Обязательное поле.'
+            )
+        if len(data) < 1:
+            raise serializers.ValidationError(
+                'Не переданы ингредиенты.'
+            )
+        if 'ingredientinrecipe' in data:
+            ingredients = data.get('ingredientinrecipe')
+            uniq_ingredients = set()
+            for ingredient in ingredients:
+                id = ingredient['id']
+                amount = ingredient['amount']
+                if amount <= 0:
+                    raise serializers.ValidationError(
+                        'Минимальное количество ингредиента: 1'
+                    )
+                uniq_ingredients.add(id)
+
+            if len(uniq_ingredients) != len(ingredients):
+                raise serializers.ValidationError(
+                    'Ингридиенты должны быть уникальными.'
+                )
         return data
 
     @staticmethod
