@@ -89,32 +89,25 @@ class AddRecipeSerializer(serializers.ModelSerializer):
         )
 
     def validate(self, data):
-        """Валидация ингредиентов и количества."""
-        if not data:
-            raise ValidationError(
-                'Обязательное поле.'
-            )
-        if len(data) < 1:
-            raise ValidationError(
-                'Не переданы ингредиенты.'
-            )
-        if 'ingredientinrecipe' in data:
-            ingredients = data.get('ingredientinrecipe')
-            uniq_ingredients = set()
-            for ingredient in ingredients:
-                id = ingredient['id']
-                amount = ingredient['amount']
-                if amount <= 0:
-                    raise ValidationError(
-                        'Минимальное количество ингредиента: 1'
-                    )
-                uniq_ingredients.add(id)
-
-            if len(uniq_ingredients) != len(ingredients):
+        """Валидируем ингредиенты."""
+        ingredients = data.get('ingredients')
+        if not ingredients:
+            raise ValidationError("Необходимо добавить ингредиенты")
+        for ingredient in ingredients:
+            if int(ingredient["amount"]) <= 0:
                 raise ValidationError(
-                    'Ингридиенты должны быть уникальными.'
+                    "Необходимо добавить хотя бы один ингредиент"
                 )
-        return data
+        ingrs = [item["id"] for item in ingredients]
+        if len(ingrs) != len(set(ingrs)):
+            raise ValidationError(
+                "Ингредиенты в рецепте должны быть уникальными!"
+            )
+        if int(ingredients['cooking_time']) < 1:
+            raise serializers.ValidationError(
+                "Время приготовления должно быть больше нуля!"
+            )
+        return ingredients
 
     @staticmethod
     def __add_ingredients(ingredients, recipe):
