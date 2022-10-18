@@ -42,6 +42,12 @@ class RecipeIngredientsAdmin(admin.ModelAdmin):
     empty_value_display = "-пусто-"
 
 
+class RecipeIngredientInline(admin.TabularInline):
+    model = RecipeIngredient
+    extra = 1
+    min_num = 1
+
+
 @admin.register(FavoriteRecipe)
 class FavoriteRecipeAdmin(admin.ModelAdmin):
     list_display = (
