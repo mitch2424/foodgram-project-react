@@ -12,10 +12,10 @@ from .models import (
 @admin.register(RecipeIngredient)
 class RecipeIngredientAdmin(admin.ModelAdmin):
     list_display = (
-     "id",
-     "recipe",
-     "ingredient",
-     "amount",
+        "id",
+        "recipe",
+        "ingredient",
+        "amount",
     )
     list_filter = ("id", "recipe", "ingredient")
     empty_value_display = "-пусто-"
