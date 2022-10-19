@@ -4,9 +4,27 @@ from .models import (
     FavoriteRecipe,
     Ingredient,
     Recipe,
-    # RecipeIngredient,
+    RecipeIngredient,
     ShoppingCart,
 )
+
+
+@admin.register(RecipeIngredient)
+class RecipeIngredientAdmin(admin.ModelAdmin):
+    list_display = (
+     "id",
+     "recipe",
+     "ingredient",
+     "amount",
+    )
+    list_filter = ("id", "recipe", "ingredient")
+    empty_value_display = "-пусто-"
+
+
+class RecipeIngredientInline(admin.TabularInline):
+    model = RecipeIngredient
+    extra = 1
+    min_num = 1
 
 
 @admin.register(Ingredient)
@@ -22,30 +40,13 @@ class RecipeAdmin(admin.ModelAdmin):
     list_display = ("id", "name", "author", "amount_favorites")
     list_filter = ("name", "author", "tags")
     search_fields = ("name",)
+    inlines = (RecipeIngredientInline,)
     empty_value_display = "-пусто-"
 
     @staticmethod
     @admin.display(description="В избранном, раз")
     def amount_favorites(obj):
         return obj.favorites.count()
-
-
-# @admin.register(RecipeIngredient)
-# class RecipeIngredientsAdmin(admin.ModelAdmin):
-#    list_display = (
-#       "id",
-#      "recipe",
-#       "ingredient",
-#       "amount",
-#  )
-#   list_filter = ("id", "recipe", "ingredient")
-#    empty_value_display = "-пусто-"
-
-
-# class RecipeIngredientsInline(admin.TabularInline):
-#  model = RecipeIngredient
-#  extra = 1
-#  min_num = 1
 
 
 @admin.register(FavoriteRecipe)
