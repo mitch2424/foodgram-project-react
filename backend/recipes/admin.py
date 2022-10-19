@@ -4,7 +4,7 @@ from .models import (
     FavoriteRecipe,
     Ingredient,
     Recipe,
-    RecipeIngredient,
+    # RecipeIngredient,
     ShoppingCart,
 )
 
