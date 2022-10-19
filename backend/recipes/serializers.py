@@ -1,3 +1,6 @@
+import logging
+from logging.handlers import RotatingFileHandler
+
 from drf_base64.fields import Base64ImageField
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
@@ -20,6 +23,7 @@ handler = RotatingFileHandler(
     'my_logger.log', maxBytes=50000000, backupCount=5
 )
 logger.addHandler(handler)
+
 
 class IngredientSerializer(serializers.ModelSerializer):
     """Сериализатор вывода ингредиентов."""
@@ -97,13 +101,13 @@ class AddRecipeSerializer(serializers.ModelSerializer):
     def validate(self, attrs):
         logger.info(attrs)
         if not attrs['ingredients'] or not attrs['tags']:
-            raise serializers.ValidationError(
+            raise ValidationError(
                 'Добавьте ингредиенты и укажите тег для рецепта!'
             )
         ingredients = attrs['ingredients']
         min_ingredients = 2
         if len(ingredients) < min_ingredients:
-            raise serializers.ValidationError(
+            raise ValidationError(
                 'Ингредиентов должно быть два или больше!'
             )
         data = []
@@ -113,18 +117,18 @@ class AddRecipeSerializer(serializers.ModelSerializer):
             if ingredient['amount'] <= 0:
                 ingredient_incorrect = ingredient['id']
                 logger.info(ingredient['amount'])
-                raise serializers.ValidationError(
+                raise ValidationError(
                     f'ЕИ - ингредиента "{ingredient_incorrect}" не'
                     'должна быть равна нулю или отрицательным числом!'
                 )
         logger.info(data)
         check_unique = set(data)
         if len(check_unique) != len(data):
-            raise serializers.ValidationError(
+            raise ValidationError(
                 'Ингредиенты должны быть уникальны!'
             )
         if attrs['cooking_time'] <= 0:
-            raise serializers.ValidationError(
+            raise ValidationError(
                 'Время приготовления должно быть больше нуля!'
             )
         return attrs
