@@ -90,8 +90,8 @@ class AddRecipeSerializer(serializers.ModelSerializer):
 
     def validate(self, data):
         """Валидируем ингредиенты."""
-        ingredients = data['ingredients']
-        unique_set = set()
+        # ingredients = data['ingredients']
+        # unique_set = set()
         if not data:
             raise ValidationError(
                 'Обязательное поле.'
