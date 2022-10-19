@@ -30,22 +30,22 @@ class RecipeAdmin(admin.ModelAdmin):
         return obj.favorites.count()
 
 
-#@admin.register(RecipeIngredient)
-#class RecipeIngredientsAdmin(admin.ModelAdmin):
+# @admin.register(RecipeIngredient)
+# class RecipeIngredientsAdmin(admin.ModelAdmin):
 #    list_display = (
- #       "id",
-  #      "recipe",
- #       "ingredient",
- #       "amount",
-    )
- #   list_filter = ("id", "recipe", "ingredient")
+#       "id",
+#      "recipe",
+#       "ingredient",
+#       "amount",
+#  )
+#   list_filter = ("id", "recipe", "ingredient")
 #    empty_value_display = "-пусто-"
 
 
-#class RecipeIngredientsInline(admin.TabularInline):
-  #  model = RecipeIngredient
-  #  extra = 1
-  #  min_num = 1
+# class RecipeIngredientsInline(admin.TabularInline):
+#  model = RecipeIngredient
+#  extra = 1
+#  min_num = 1
 
 
 @admin.register(FavoriteRecipe)
