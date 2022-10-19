@@ -94,7 +94,7 @@ class AddRecipeSerializer(serializers.ModelSerializer):
         for ingredient_data in ingredients:
             current_ingredient = ingredient_data['id']
             if current_ingredient in unique_set:
-                raise serializers.ValidationError(
+                raise ValidationError(
                     'В списке ингредиентов - два одинаковых значения.'
                     ' Проверьте состав.'
                 )
