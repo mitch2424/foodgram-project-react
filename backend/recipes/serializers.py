@@ -114,7 +114,6 @@ class AddRecipeSerializer(serializers.ModelSerializer):
                     raise ValidationError(
                         'Ингредиенты должны быть уникальными.'
                     )
-                unique_set.add(id)
 
                 if int(ingredients['cooking_time']) < 1:
                     raise ValidationError(
