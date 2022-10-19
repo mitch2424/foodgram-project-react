@@ -14,6 +14,12 @@ from tags.models import Tag
 from tags.serializers import TagSerializer
 from users.serializers import CustomUserSerializer
 
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
+handler = RotatingFileHandler(
+    'my_logger.log', maxBytes=50000000, backupCount=5
+)
+logger.addHandler(handler)
 
 class IngredientSerializer(serializers.ModelSerializer):
     """Сериализатор вывода ингредиентов."""
@@ -88,38 +94,40 @@ class AddRecipeSerializer(serializers.ModelSerializer):
             "author",
         )
 
-    def validate(self, data):
-        """Валидируем ингредиенты."""
-        if not data:
-            raise ValidationError(
-                'Обязательное поле.'
+    def validate(self, attrs):
+        logger.info(attrs)
+        if not attrs['ingredients'] or not attrs['tags']:
+            raise serializers.ValidationError(
+                'Добавьте ингредиенты и укажите тег для рецепта!'
             )
-        if len(data) < 1:
-            raise ValidationError(
-                'Не переданы ингредиенты.'
+        ingredients = attrs['ingredients']
+        min_ingredients = 2
+        if len(ingredients) < min_ingredients:
+            raise serializers.ValidationError(
+                'Ингредиентов должно быть два или больше!'
             )
-        if 'ingredients' in data:
-            ingredients = data['ingredients']
-            unique_set = set()
-            for ingredient_data in ingredients:
-                id = ingredient_data['id']
-                amount = ingredient_data['amount']
-                if amount <= 0:
-                    raise ValidationError(
-                        'Минимальное количество ингредиента: 1'
-                    )
-                unique_set.add(amount)
-
-                if id in unique_set:
-                    raise ValidationError(
-                        'Ингредиенты должны быть уникальными.'
-                    )
-
-                if int(ingredients['cooking_time']) < 1:
-                    raise ValidationError(
-                        "Время приготовления должно быть больше нуля!"
-                    )
-        return data
+        data = []
+        for ingredient in ingredients:
+            logger.info(ingredient['amount'])
+            data.append(ingredient['id'])
+            if ingredient['amount'] <= 0:
+                ingredient_incorrect = ingredient['id']
+                logger.info(ingredient['amount'])
+                raise serializers.ValidationError(
+                    f'ЕИ - ингредиента "{ingredient_incorrect}" не'
+                    'должна быть равна нулю или отрицательным числом!'
+                )
+        logger.info(data)
+        check_unique = set(data)
+        if len(check_unique) != len(data):
+            raise serializers.ValidationError(
+                'Ингредиенты должны быть уникальны!'
+            )
+        if attrs['cooking_time'] <= 0:
+            raise serializers.ValidationError(
+                'Время приготовления должно быть больше нуля!'
+            )
+        return attrs
 
     @staticmethod
     def __add_ingredients(ingredients, recipe):
