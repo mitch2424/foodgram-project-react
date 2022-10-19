@@ -88,27 +88,38 @@ class AddRecipeSerializer(serializers.ModelSerializer):
             "author",
         )
 
-    def validate(self, data):
-        if len(data['tags']) == 0:
+    def validate(self, attrs):
+
+        if not attrs['ingredients'] or not attrs['tags']:
             raise ValidationError(
-                'Необходимо добавить минимум 1 тег')
-        if len(data['tags']) > len(set(data['tags'])):
+                'Добавьте ингредиенты и укажите тег для рецепта!'
+            )
+        ingredients = attrs['ingredients']
+        min_ingredients = 2
+        if len(ingredients) < min_ingredients:
             raise ValidationError(
-                'Теги не должны повторяться!')
-        id_ingredients = set()
-        ingredients = self.initial_data['ingredients']
+                'Ингредиентов должно быть два или больше!'
+            )
+        data = []
         for ingredient in ingredients:
-            if ingredient['id'] not in id_ingredients:
-                id_ingredients.add(ingredient['id'])
-            else:
+
+            data.append(ingredient['id'])
+            if ingredient['amount'] <= 0:
+                ingredient_incorrect = ingredient['id']
                 raise ValidationError(
-                    'Ингредиенты повторяются!'
+                    f'ЕИ - ингредиента "{ingredient_incorrect}" не'
+                    'должна быть равна нулю или отрицательным числом!'
                 )
-            if int(ingredient['amount']) <= 0:
-                raise ValidationError(
-                    'Amount должен быть больше 0!'
-                )
-        return data
+        check_unique = set(data)
+        if len(check_unique) != len(data):
+            raise ValidationError(
+                'Ингридиенты должны быть уникальны!'
+            )
+        if attrs['cooking_time'] <= 0:
+            raise ValidationError(
+                'Время приготовления должно быть больше нуля!'
+            )
+        return attrs
 
     @staticmethod
     def __add_ingredients(ingredients, recipe):
