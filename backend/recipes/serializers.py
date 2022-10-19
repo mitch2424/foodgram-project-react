@@ -1,6 +1,3 @@
-import logging
-from logging.handlers import RotatingFileHandler
-
 from drf_base64.fields import Base64ImageField
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
@@ -16,13 +13,6 @@ from recipes.models import (
 from tags.models import Tag
 from tags.serializers import TagSerializer
 from users.serializers import CustomUserSerializer
-
-logger = logging.getLogger(__name__)
-logger.setLevel(logging.INFO)
-handler = RotatingFileHandler(
-    'my_logger.log', maxBytes=50000000, backupCount=5
-)
-logger.addHandler(handler)
 
 
 class IngredientSerializer(serializers.ModelSerializer):
@@ -99,12 +89,12 @@ class AddRecipeSerializer(serializers.ModelSerializer):
         )
 
     def validate(self, data):
-        logger.info(data)
-        if not data['ingredients'] or not data['tags']:
+        if not data:
             raise ValidationError(
                 'Добавьте ингредиенты и укажите тег для рецепта!'
             )
         ingredients = data['ingredients']
+        unique_ingredients = set(data)
         min_ingredients = 2
         if len(ingredients) < min_ingredients:
             raise ValidationError(
@@ -112,22 +102,17 @@ class AddRecipeSerializer(serializers.ModelSerializer):
             )
         data = []
         for ingredient in ingredients:
-            logger.info(ingredient['amount'])
-            data.append(ingredient['id'])
             if ingredient['amount'] <= 0:
                 ingredient_incorrect = ingredient['id']
-                logger.info(ingredient['amount'])
                 raise ValidationError(
                     f'ЕИ - ингредиента "{ingredient_incorrect}" не'
                     'должна быть равна нулю или отрицательным числом!'
                 )
-        logger.info(data)
-        check_unique = set(data)
-        if len(check_unique) != len(data):
+        if len(unique_ingredients) != len(data):
             raise ValidationError(
                 'Ингредиенты должны быть уникальными!'
             )
-        if int(data['cooking_time']) < 1:
+        if int(ingredients['cooking_time']) < 1:
             raise ValidationError(
                 'Время приготовления должно быть больше нуля!'
             )
