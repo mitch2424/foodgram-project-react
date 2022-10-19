@@ -102,6 +102,7 @@ class AddRecipeSerializer(serializers.ModelSerializer):
             )
         data = []
         for ingredient in ingredients:
+            data.append(ingredient['id'])
             if ingredient['amount'] <= 0:
                 ingredient_incorrect = ingredient['id']
                 raise ValidationError(
