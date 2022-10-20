@@ -16,7 +16,7 @@ from users.serializers import CustomUserSerializer
 
 
 class IngredientSerializer(serializers.ModelSerializer):
-    """Сериализатор вывода ингредиентов."""
+    """Serializer for the output of ingredients."""
 
     class Meta:
         model = Ingredient
@@ -28,7 +28,7 @@ class IngredientSerializer(serializers.ModelSerializer):
 
 
 class ShortRecipeSerializer(serializers.ModelSerializer):
-    """Сериализатор для краткого отображения рецепта."""
+    """Serializer for a brief display of the recipe."""
 
     class Meta:
         model = Recipe
@@ -36,7 +36,7 @@ class ShortRecipeSerializer(serializers.ModelSerializer):
 
 
 class ShowIngredientsInRecipeSerializer(serializers.ModelSerializer):
-    """Сериализатор для вывода ингредиентов в рецепте."""
+    """Serializer for displaying ingredients in a recipe."""
 
     id = serializers.ReadOnlyField(source="ingredient.id")
     name = serializers.ReadOnlyField(source="ingredient.name")
@@ -55,7 +55,7 @@ class ShowIngredientsInRecipeSerializer(serializers.ModelSerializer):
 
 
 class AddIngredientRecipeSerializer(serializers.ModelSerializer):
-    """Сериализатор для добавления ингредиентов."""
+    """A serializer for adding ingredients."""
 
     id = serializers.PrimaryKeyRelatedField(queryset=Ingredient.objects.all())
 
@@ -65,7 +65,7 @@ class AddIngredientRecipeSerializer(serializers.ModelSerializer):
 
 
 class AddRecipeSerializer(serializers.ModelSerializer):
-    """Сериализатор добавления рецепта."""
+    """Serializer for adding a recipe."""
 
     ingredients = AddIngredientRecipeSerializer(many=True)
     tags = serializers.PrimaryKeyRelatedField(
@@ -89,6 +89,7 @@ class AddRecipeSerializer(serializers.ModelSerializer):
         )
 
     def validate(self, ingredients_):
+        """Validation of ingredients for creating a recipe"""
 
         if not ingredients_['ingredients'] or not ingredients_['tags']:
             raise ValidationError(
@@ -159,7 +160,7 @@ class AddRecipeSerializer(serializers.ModelSerializer):
 
 
 class ShowRecipeSerializer(serializers.ModelSerializer):
-    """Сериализатор для отображения рецепта."""
+    """Serializer for displaying the recipe."""
 
     tags = TagSerializer(many=True, read_only=True)
     author = CustomUserSerializer(read_only=True)
@@ -185,12 +186,12 @@ class ShowRecipeSerializer(serializers.ModelSerializer):
 
     @staticmethod
     def get_ingredients(obj):
-        """Получаем ингредиенты из модели RecipeIngredient."""
+        """We get the ingredients from the RecipeIngredient model."""
         ingredients = RecipeIngredient.objects.filter(recipe=obj)
         return ShowIngredientsInRecipeSerializer(ingredients, many=True).data
 
     def get_is_favorited(self, obj):
-        """Проверяем в избранном ли рецепт."""
+        """Check whether the recipe is in the favorites."""
         request = self.context.get("request")
         if not request or request.user.is_anonymous:
             return False
@@ -199,7 +200,7 @@ class ShowRecipeSerializer(serializers.ModelSerializer):
         ).exists()
 
     def get_is_in_shopping_cart(self, obj):
-        """Проверяем в корзине ли рецепт."""
+        """We check whether the recipe is in the shopping cart."""
         request = self.context.get("request")
         if not request or request.user.is_anonymous:
             return False
@@ -209,7 +210,7 @@ class ShowRecipeSerializer(serializers.ModelSerializer):
 
 
 class FavoriteRecipeSerializer(serializers.ModelSerializer):
-    """Сериализатор избранного."""
+    """Serializer of favorites."""
 
     user = serializers.HiddenField(
         default=CustomUserSerializer(read_only=True)
@@ -230,7 +231,7 @@ class FavoriteRecipeSerializer(serializers.ModelSerializer):
 
 
 class ShoppingCartSerializer(serializers.ModelSerializer):
-    """Сериализатор списка покупок."""
+    """Shopping list serializer."""
 
     user = serializers.HiddenField(
         default=CustomUserSerializer(read_only=True)

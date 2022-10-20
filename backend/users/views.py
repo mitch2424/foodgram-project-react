@@ -15,7 +15,7 @@ from users.serializers import (
 
 
 class CustomUserViewSet(UserViewSet):
-    """Вьюсет для пользователя."""
+    """Viewset for the user."""
 
     queryset = User.objects.all()
     serializer_class = CustomUserSerializer
@@ -31,7 +31,7 @@ class CustomUserViewSet(UserViewSet):
         permission_classes=[permissions.IsAuthenticated],
     )
     def subscribe(self, request, id):
-        """Подписка/отписка на/от автора."""
+        """Subscribe/unsubscribe to/from the author."""
         author = get_object_or_404(User, id=id)
         serializer = FollowSerializer(
             data={"user": request.user.id, "author": id}
@@ -56,7 +56,7 @@ class CustomUserViewSet(UserViewSet):
         permission_classes=[permissions.IsAuthenticated],
     )
     def show_follows(self, request):
-        """Просмотр подписок."""
+        """Viewing subscriptions."""
         user_obj = User.objects.filter(following__user=request.user)
         paginator = PageNumberPagination()
         result_page = paginator.paginate_queryset(user_obj, request)

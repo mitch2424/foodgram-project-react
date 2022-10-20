@@ -4,7 +4,7 @@ from .models import Ingredient, Recipe, Tag
 
 
 class IngredientSearchFilter(filters.FilterSet):
-    """Фильтр по частичному вхождению в начале названия ингредиента."""
+    """Filter  at the beginning of the ingredient name."""
 
     name = filters.CharFilter(
         field_name="name",
@@ -17,7 +17,7 @@ class IngredientSearchFilter(filters.FilterSet):
 
 
 class RecipeFilter(filters.FilterSet):
-    """Фильтр по избранному, автору, списку покупок и тэгам"""
+    """Filter by favorites, author, shopping list and tags"""
 
     tags = filters.ModelMultipleChoiceFilter(
         field_name="tags__slug",

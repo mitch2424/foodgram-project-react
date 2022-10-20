@@ -12,7 +12,7 @@ RECIPES_LIMIT = 3
 
 
 class CreateUserSerializer(UserCreateSerializer):
-    """Сериализатор при создании пользователя."""
+    """Serializer when creating a user."""
 
     class Meta:
         model = User
@@ -39,7 +39,7 @@ class CreateUserSerializer(UserCreateSerializer):
 
 
 class CustomUserSerializer(UserSerializer):
-    """Сериализатор для отображения пользователя."""
+    """A serializer for displaying the user."""
 
     is_subscribed = serializers.SerializerMethodField(read_only=True)
 
@@ -62,7 +62,7 @@ class CustomUserSerializer(UserSerializer):
 
 
 class FollowShortRecipeSerializer(serializers.ModelSerializer):
-    """Сериализатор для отображения рецептов в подписке."""
+    """Serializer for displaying recipes in a subscription."""
 
     class Meta:
         model = Recipe
@@ -70,7 +70,7 @@ class FollowShortRecipeSerializer(serializers.ModelSerializer):
 
 
 class ShowFollowsSerializer(CustomUserSerializer):
-    """Сериализатор отображения подписок."""
+    """Serializer for displaying subs."""
 
     recipes = serializers.SerializerMethodField()
     recipes_count = serializers.SerializerMethodField()
@@ -98,7 +98,7 @@ class ShowFollowsSerializer(CustomUserSerializer):
 
 
 class FollowSerializer(serializers.ModelSerializer):
-    """Сериализатор подписок."""
+    """Subscription serializer."""
 
     user = serializers.IntegerField(source="user.id")
     author = serializers.IntegerField(source="author.id")

@@ -4,7 +4,7 @@ from tags.models import Tag
 
 
 class TagSerializer(serializers.ModelSerializer):
-    """Сериализатор тэгов."""
+    """Tag Serializer."""
 
     class Meta:
         model = Tag

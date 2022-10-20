@@ -3,7 +3,7 @@ from django.db import models
 
 
 class Tag(models.Model):
-    """Тэг."""
+    """Tag."""
 
     name = models.CharField(
         max_length=20,

@@ -9,7 +9,7 @@ User = get_user_model()
 
 
 class Ingredient(models.Model):
-    """Ингредиент."""
+    """Ingredient."""
 
     name = models.CharField(
         max_length=200,
@@ -30,7 +30,7 @@ class Ingredient(models.Model):
 
 
 class Recipe(models.Model):
-    """Рецепт."""
+    """Recipe."""
 
     name = models.CharField(
         verbose_name="Название рецепта",
@@ -79,7 +79,7 @@ class Recipe(models.Model):
 
 
 class RecipeIngredient(models.Model):
-    """Ингредиент в рецепте, модель связи."""
+    """The ingredient in the recipe, the communication model."""
 
     recipe = models.ForeignKey(
         Recipe,
@@ -119,7 +119,7 @@ class RecipeIngredient(models.Model):
 
 
 class FavoriteRecipe(models.Model):
-    """Избранное."""
+    """Favourites."""
 
     user = models.ForeignKey(
         User,
@@ -148,7 +148,7 @@ class FavoriteRecipe(models.Model):
 
 
 class ShoppingCart(models.Model):
-    """Список покупок."""
+    """Shopping cart."""
 
     user = models.ForeignKey(
         User,

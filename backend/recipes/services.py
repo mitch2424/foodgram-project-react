@@ -3,7 +3,7 @@ from django.http import HttpResponse
 
 
 def convert_to_file(cart_ingredients):
-    """Функция для формирования списка покупок."""
+    """A function for generating a shopping cart."""
     shopping_cart = []
     for ing in cart_ingredients:
         name = ing["ingredient__name"]

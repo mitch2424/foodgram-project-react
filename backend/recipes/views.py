@@ -27,7 +27,7 @@ from .serializers import (
 
 
 class IngredientViewSet(viewsets.ReadOnlyModelViewSet):
-    """Вьюсет для обработки ингредиентов."""
+    """A viewset for processing ingredients."""
 
     queryset = Ingredient.objects.all()
     serializer_class = IngredientSerializer
@@ -38,7 +38,7 @@ class IngredientViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 class RecipeViewSet(viewsets.ModelViewSet):
-    """Вьюсет для обработки рецептов."""
+    """A viewset for processing recipes."""
 
     queryset = Recipe.objects.all()
     filter_backends = [DjangoFilterBackend]
@@ -57,7 +57,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
         )
 
     def __add_or_del_recipe(self, method, user, pk, model, serializer):
-        """Добавление/удаление в избранное или список покупок."""
+        """Add/remove to favorites or shopping cart."""
         recipe = get_object_or_404(Recipe, pk=pk)
         if method == "POST":
             model.objects.get_or_create(user=user, recipe=recipe)
@@ -78,7 +78,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
         permission_classes=[permissions.IsAuthenticated],
     )
     def favorite(self, request, pk):
-        """Добавление в избранное, удаление из избранного"""
+        """Adding to favorites, deleting from favorites."""
         return self.__add_or_del_recipe(
             request.method,
             request.user,
@@ -95,7 +95,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
         permission_classes=[permissions.IsAuthenticated],
     )
     def shopping_cart(self, request, pk):
-        """Добавление покупок в корзине, удаление покупок из корзины."""
+        """Adding purchases to the shopping cart, removing purchases from the shopping cart."""
         return self.__add_or_del_recipe(
             request.method,
             request.user,
@@ -116,7 +116,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
         ],
     )
     def download_shopping_cart(self, request):
-        """Выгрузка списка покупок."""
+        """Uploading the shopping cart."""
         cart_ingredients = (
             RecipeIngredient.objects.filter(
                 recipe__shopping_cart__user=request.user
