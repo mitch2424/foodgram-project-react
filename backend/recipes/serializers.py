@@ -88,19 +88,18 @@ class AddRecipeSerializer(serializers.ModelSerializer):
             "author",
         )
 
-    def validate(self, attrs):
+    def validate(self, data):
 
-        if not attrs['ingredients'] or not attrs['tags']:
+        if not data['ingredients'] or not data['tags']:
             raise ValidationError(
                 'Добавьте ингредиенты и укажите тег для рецепта!'
             )
-        ingredients = attrs['ingredients']
+        ingredients = data['ingredients']
         min_ingredients = 2
         if len(ingredients) < min_ingredients:
             raise ValidationError(
                 'Ингредиентов должно быть два или больше!'
             )
-        data = []
         for ingredient in ingredients:
             data.append(ingredient['id'])
             if ingredient['amount'] <= 0:
@@ -109,16 +108,16 @@ class AddRecipeSerializer(serializers.ModelSerializer):
                     f'ЕИ - ингредиента "{ingredient_incorrect}" не'
                     'должна быть равна нулю или отрицательным числом!'
                 )
-        check_unique = set(data)
-        if len(check_unique) != len(data):
+        check_unique = set()
+        if len(check_unique) != len(ingredients):
             raise ValidationError(
-                'Ингридиенты должны быть уникальны!'
+                'Ингредиенты повторяются, объедините их или выберите другие!'
             )
-        if attrs['cooking_time'] <= 0:
+        if data['cooking_time'] <= 0:
             raise ValidationError(
                 'Время приготовления должно быть больше нуля!'
             )
-        return attrs
+        return data
 
     @staticmethod
     def __add_ingredients(ingredients, recipe):
