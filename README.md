@@ -1,7 +1,8 @@
 ### praktikum_diplom
 [![foodgram workflow](https://github.com/mitch2424/foodgram-project-react/actions/workflows/main.yml/badge.svg)](https://github.com/mitch2424/foodgram-project-react/actions/workflows/main.yml)
 
-Проект доступен по адресу: http://51.250.93.237/
+Проект доступен был по адресу: http://51.250.93.237/
+На данный момент отключен.
 
 Доступ в админку: 
 ```
@@ -10,10 +11,9 @@
 
 Пользователи: 
 ````
-ivan24.rublev@yandex.ru
+ 
 пароль admin_admin
-mirlan.kaparov24@gmail.com 
-пароль admin_admin
+ 
 ````
 # Foodgram, «Продуктовый помощник»
 
