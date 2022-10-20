@@ -1,6 +1,3 @@
-import logging
-from logging.handlers import RotatingFileHandler
-
 from drf_base64.fields import Base64ImageField
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
@@ -16,13 +13,6 @@ from recipes.models import (
 from tags.models import Tag
 from tags.serializers import TagSerializer
 from users.serializers import CustomUserSerializer
-
-logger = logging.getLogger(__name__)
-logger.setLevel(logging.INFO)
-handler = RotatingFileHandler(
-    'my_logger.log', maxBytes=50000000, backupCount=5
-)
-logger.addHandler(handler)
 
 
 class IngredientSerializer(serializers.ModelSerializer):
@@ -99,7 +89,7 @@ class AddRecipeSerializer(serializers.ModelSerializer):
         )
 
     def validate(self, attrs):
-        logger.info(attrs)
+
         if not attrs['ingredients'] or not attrs['tags']:
             raise ValidationError(
                 'Добавьте ингредиенты и укажите тег для рецепта!'
@@ -112,16 +102,13 @@ class AddRecipeSerializer(serializers.ModelSerializer):
             )
         data = []
         for ingredient in ingredients:
-            logger.info(ingredient['amount'])
             data.append(ingredient['id'])
             if ingredient['amount'] <= 0:
                 ingredient_incorrect = ingredient['id']
-                logger.info(ingredient['amount'])
                 raise ValidationError(
                     f'ЕИ - ингредиента "{ingredient_incorrect}" не'
                     'должна быть равна нулю или отрицательным числом!'
                 )
-        logger.info(data)
         check_unique = set(data)
         if len(check_unique) != len(data):
             raise ValidationError(
